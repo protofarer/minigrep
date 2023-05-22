@@ -3,9 +3,7 @@ use std::{env, process};
 use minigrep::Config;
 
 fn main() {
-    let args = env::args().collect::<Vec<String>>();
-
-    let config = Config::build(&args).unwrap_or_else(|err| {
+    let config = Config::build(env::args()).unwrap_or_else(|err| {
         eprintln!("Problem parsing args: {err}",);
         println!("Usage: cargo run -- [-i, ...] <query> <file>");
         process::exit(1);

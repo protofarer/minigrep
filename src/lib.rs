@@ -12,7 +12,8 @@ pub enum Option {
     IgnoreCase,
 }
 impl Config {
-    pub fn build(args: &[String]) -> Result<Config, &'static str> {
+    pub fn build(args: impl Iterator<Item = String>) -> Result<Config, &'static str> {
+        let args = args.collect::<Vec<String>>();
         if args.len() < 3 {
             return Err("Not enough args");
         }
@@ -70,13 +71,10 @@ pub fn run(config: Config) -> Result<String, Box<dyn Error>> {
 }
 
 pub fn search<'a>(query: &str, contents: &'a str) -> Vec<&'a str> {
-    let mut results = Vec::new();
-    for line in contents.lines() {
-        if line.contains(query) {
-            results.push(line);
-        }
-    }
-    results
+    contents
+        .lines()
+        .filter(|line| line.contains(query))
+        .collect()
 }
 
 pub fn search_case_insensitive<'a>(query: &str, contents: &'a str) -> Vec<&'a str> {
